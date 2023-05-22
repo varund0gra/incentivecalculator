@@ -1,18 +1,18 @@
-import { Output , HomePage,DashBoard} from './Components';
-import './App.css'
-import { BrowserRouter , Route,Routes} from "react-router-dom";
-import Dashboard from './Components/Dashboard2.0';
+import { AddedUsers, AddUserStats, CreateUsers,LoginAdmin, UserLogin ,Dashboard } from "./Components";
+import "./App.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 function App() {
   return (
     <BrowserRouter>
-    <Routes>
-      <Route path='/' element={<HomePage/>}/>
-      <Route path='/admin/addperformance' element={<DashBoard/>}/>
-      <Route path='/app/dashboard' element={<Dashboard/>}/>
-    </Routes>
+      <Routes>
+        <Route path="/" element={<LoginAdmin />} />
+        <Route path="/admin/createuser" element={<CreateUsers />} />
+        <Route path="/admin/userlist" element={<AddedUsers />} />
+        <Route path="/admin/addstats" element={<AddUserStats />} />
+        <Route path="/app/signin" element={<UserLogin />} />
+        <Route path='/app/dashboard' element={<Dashboard/>}/>
+      </Routes>
     </BrowserRouter>
-
-      
   );
 }
 

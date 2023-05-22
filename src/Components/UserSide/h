@@ -1,5 +1,4 @@
 import * as React from "react";
-import ChartBox from "./ChartBox";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -13,7 +12,6 @@ import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
@@ -24,8 +22,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
-import Footer from "./Footer";
-
 
 import { useEffect, useState } from "react";
 import SemiCircleProgressBar from "react-progressbar-semicircle";
@@ -170,8 +166,6 @@ function DashBoardContent() {
             >
               Dashboard
             </Typography>
-            
-
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -190,9 +184,9 @@ function DashBoardContent() {
           <Divider />
           <List component="nav">
             <React.Fragment>
-            <ListItemButton>
+              <ListItemButton>
                 <ListItemIcon>
-                <DashboardIcon />
+                  <DashboardIcon />
                 </ListItemIcon>
                 <h5>Filter Month Data</h5>
               </ListItemButton>
@@ -209,7 +203,6 @@ function DashBoardContent() {
                     displayEmpty
                     inputProps={{ "aria-label": "Without label" }}
                   >
-                    
                     {localstoragedata.map((item, index) => (
                       <MenuItem key={index} value={item.month}>
                         {item.month}
@@ -218,10 +211,7 @@ function DashBoardContent() {
                   </Select>
                 </FormControl>
               </ListItemButton>
-              
             </React.Fragment>
-            {/* <Divider sx={{ my: 1 }} />
-            {secondaryListItems} */}
           </List>
         </Drawer>
         <Box
@@ -314,6 +304,8 @@ function DashBoardContent() {
                   <br />
                 </Paper>
               </Grid>
+
+
               {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
                 <h2
@@ -335,18 +327,14 @@ function DashBoardContent() {
                     height: 390,
                   }}
                 >
-                {/* <img src='https://blog.vantagecircle.com/content/images/2021/08/monetary-incentive-programs.png'/> */}
-                  <Stack sx={{ width: "100%" , mt:4}} spacing={2}>
+                  <Stack sx={{ width: "100%", mt: 4 }} spacing={2}>
                     <Alert severity="info">
                       Total Calculated Incentive Rs:{calculateIncentive}
                     </Alert>
                   </Stack>
-                  {/* <ChartBox/> */}
                 </Paper>
               </Grid>
 
-
-              
               {/* Recent Orders */}
               <Grid item xs={12}>
                 <h2
@@ -378,7 +366,7 @@ function DashBoardContent() {
             </Grid>
             {/* <Copyright sx={{ pt: 4 }} /> */}
           </Container>
-          <Footer />
+          {/* <Footer /> */}
         </Box>
       </Box>
     </ThemeProvider>
@@ -387,3 +375,58 @@ function DashBoardContent() {
 export default function Dashboard() {
   return <DashBoardContent />;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from 'react';
+
+const MyComponent = () => {
+  const [data, setData] = useState([]);
+
+  // useEffect hook to fetch data from the API
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('https://api.example.com/data');
+      setData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  return (
+    <div>
+      {/* Render the data */}
+      {data.map(item => (
+        <div key={item.id}>{item.name}</div>
+      ))}
+    </div>
+  );
+};
+
+export default MyComponent;
+

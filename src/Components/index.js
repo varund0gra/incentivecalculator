@@ -1,6 +1,23 @@
-import AddPerformance from "./AddPerformance";
-import HomePage from "./Homepage";
-import DashBoard from "./DashBoard";
-import Footer from "./Footer";
-import Header from "./navbar";
-export  {AddPerformance, HomePage,DashBoard, Footer, Header}
+import HomePage from "./CreateUsers";
+import UserList from "./UsersList";
+import LoginInSide from "./LoginAdmin";
+import SignInSide from "./LoginAdmin";
+import AddedUsers from "./AddedUsers";
+import AddUserStats from "./Card";
+import CreateUsers from "./CreateUsers";
+import LoginAdmin from "./LoginAdmin";
+import UserLogin from "./UserSide/UserLogin";
+import Dashboard from "./UserSide/Dashboard";
+export {
+  HomePage,
+  UserList,
+  LoginInSide,
+  SignInSide,
+  AddedUsers,
+  AddUserStats,
+  CreateUsers,
+  LoginAdmin,
+  UserLogin,
+  Dashboard
+
+};

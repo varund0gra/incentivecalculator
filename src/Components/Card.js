@@ -7,61 +7,81 @@ import React from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Stack from "@mui/material/Stack";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-export default function ImgMediaCard() {
-  // states
-  const [comunicationSkill, setComunicationSkill] = useState(0);
-  const [employePerformance, setemployePerformance] = useState(0);
-  const [punctuality, setPunctuality] = useState(0);
-  const [productivity, setProductivity] = useState(0);
-  const [month, setMonth] = useState("");
-  const [employeeStats, setEmployeeStats] = useState(
-    JSON.parse(localStorage.getItem("data") || "[]")
-  );
 
+export default function AddUserStats() {
+  // states
+
+  const [month, setMonth] = useState("fdvfd");
+  const [sliderVal, setSliderVal] = useState({});
+  const [employeeStats, setEmployeeStats] = useState({});
+  const [statsLocalstorgeData, setStatsLocalstorgeData] = useState([]);
+  const [indexdata, setindexdata] = useState({});
+  const index = localStorage.getItem("index");
   const navigate = useNavigate();
-  function HandleSubmit() {
-    setEmployeeStats((prev) => [
-      ...prev,
-      {
-        comunicationSkill,
-        employePerformance,
-        punctuality,
-        productivity,
-        month,
-      },
-    ]);
-    setComunicationSkill(0);
-    setemployePerformance(0)
-    setPunctuality(0)
-    setProductivity(0);
-    setMonth("");
-    setOpen(true)
-  }
+  const [open, setOpen] = React.useState(false);
+  const [apiData, setApiData] = useState("");
+
   useEffect(() => {
     localStorage.setItem("data", JSON.stringify(employeeStats));
   }, [employeeStats]);
 
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
   function handleRedirect(e) {
     e.preventDefault();
     navigate("/app/dashboard");
   }
-  const [open, setOpen] = React.useState(false);
 
-const handleClose = (event, reason) => {
-  if (reason === 'clickaway') {
-    return;
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  function HandleSubmit() {
+    const sliderValueArray = statsLocalstorgeData.map((val) => ({
+      type: val.statsTypeValue,
+      value: sliderVal[val.statsTypeValue] || 0,
+    }));
+
+    const newStat = {
+      month,
+      sliderValueArray,
+    };
+
+    const updatedIndexData = {
+      ...indexdata,
+      E_stats: [...indexdata.E_stats, newStat],
+    };
+
+    axios
+      .put(`http://localhost:4000/api/products/${index}`, updatedIndexData)
+      .then((res) => {
+        setApiData(res.data);
+      });
   }
+  useEffect(() => {
+    axios.get("http://localhost:4000/api/products").then((res) => {
+      setApiData(res.data);
+    });
+    axios.get(`http://localhost:4000/api/products/${index}`).then((res) => {
+      setindexdata(res.data);
+    });
+    const g = JSON.parse(localStorage.getItem("cardStatsData"));
+    setStatsLocalstorgeData(g);
+  }, []);
 
-  setOpen(false);
-};
   return (
     <Box
       width={300}
@@ -85,215 +105,81 @@ const handleClose = (event, reason) => {
       </div>
       <div
         className="Container"
-        style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
+        style={{
+          display: "flex",
+          justifyContent: "start",
+          marginTop: "20px",
+        }}
       >
-        <Card
-          sx={{
-            maxWidth: 350,
-            m: 4,
-            boxShadow: "20px 20px 50px grey",
-          }}
-        >
-          <CardMedia
-            component="img"
-            height="70"
-            style={{ backgroundColor: "#756595" }}
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              Communication Skill
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Communication skills are the abilities you use when giving and
-              receiving different kinds of information. Some examples include
-              communicating new ideas, feelings or even an update on your
-              project.
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Box sx={{ width: 290 }}>
-              <Typography id="non-linear-slider" gutterBottom >
-                Score Value:{comunicationSkill}
+        {statsLocalstorgeData.map((val) => (
+          <Card
+            key={val.statsTypeValue}
+            sx={{
+              maxWidth: 350,
+              m: 4,
+              boxShadow: "20px 20px 50px grey",
+            }}
+          >
+            <CardMedia
+              component="img"
+              height="70"
+              style={{ backgroundColor: "#756595" }}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                {val.statsTypeValue}
               </Typography>
-              <Slider
-                min={0}
-                max={100}
-                value={comunicationSkill}
-                style={{marginLeft:"10px"}}
-                onChange={(e) => setComunicationSkill(e.target.value)}
-                valueLabelDisplay="auto"
-                aria-labelledby="non-linear-slider"
-              />
-            </Box>
-          </CardActions>
-        </Card>
-        <br />
-        <Card
-          sx={{
-            maxWidth: 350,
-            m: 4,
-            boxShadow: "20px 20px 50px grey",
-          }}
-        >
-          <CardMedia
-            component="img"
-            height="70"
-            style={{ backgroundColor: "#756595" }}
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              Punctuality
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Punctuality is the ability to be prompt, attend appointments on
-              time and submit your assignments by the deadline. In a
-              professional environment, being punctual involves planning ahead
-              and making arrangements to ensure that you can fulfill your
-              obligations on a strict schedule.
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Box sx={{ width: 290 }}>
-              <Typography id="non-linear-slider" gutterBottom>
-                Score Value:{punctuality}
-              </Typography>
-              <Slider
-                min={0}
-                max={100}
-                value={punctuality}
-                style={{marginLeft:"10px"}}
-                onChange={(e) => setPunctuality(e.target.value)}
-                valueLabelDisplay="auto"
-                aria-labelledby="non-linear-slider"
-              />
-            </Box>
-          </CardActions>
-        </Card>
-        <br />
-        <Card
-          sx={{
-            maxWidth: 350,
-            m: 4,
-            boxShadow: "20px 20px 50px grey",
-          }}
-        >
-          <CardMedia
-            component="img"
-            height="70"
-            style={{ backgroundColor: "#756595" }}
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              Performance
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              There are many ways to appear confident such as making eye contact
-              when you’re addressing someone, sitting up straight with your
-              shoulders open and preparing ahead of time so your thoughts are
-              polished.
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Box sx={{ width: 290 }}>
-              <Typography id="non-linear-slider" gutterBottom>
-                 Score Value:{employePerformance}
-              </Typography>
-              <Slider
-                min={0}
-                max={100}
-                value={employePerformance}
-                style={{marginLeft:"10px"}}
-                onChange={(e) => setemployePerformance(e.target.value)}
-                valueLabelDisplay="auto"
-                aria-labelledby="non-linear-slider"
-              />
-            </Box>
-          </CardActions>
-        </Card>
-        <br />
-        <Card
-          sx={{
-            maxWidth: 350,
-            m: 4,
-            boxShadow: "20px 20px 50px grey",
-          }}
-        >
-          <CardMedia
-            component="img"
-            height="70"
-            style={{ backgroundColor: "#756595" }}
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              Productivity
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              It allows employees to complete their tasks efficiently. Companies
-              often measure employees productivity to assess how long it takes
-              to complete their tasks and determine whether they are
-              consistently meeting deadlines. This allows them to identify
-              potential areas for improvement.
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Box sx={{ width: 290 }}>
-              <Typography id="non-linear-slider" gutterBottom>
-                 Score Value:{productivity}
-              </Typography>
-              <Slider
-                min={0}
-                max={100}
-                style={{marginLeft:"10px"}}
-                value={productivity}
-                onChange={(e) => setProductivity(e.target.value)}
-                valueLabelDisplay="auto"
-                aria-labelledby="non-linear-slider"
-              />
-            </Box>
-          </CardActions>
-        </Card>
+            </CardContent>
+            <CardActions>
+              <Box sx={{ width: 290 }}>
+                <Typography gutterBottom>
+                  Score Value: {sliderVal[val.statsTypeValue] || 0}
+                </Typography>
+                <Slider
+                  min={0}
+                  max={Number(val.statsMaxValue)}
+                  value={sliderVal[val.statsTypeValue] || 0}
+                  onChange={(e) =>
+                    setSliderVal((prevSliderVal) => ({
+                      ...prevSliderVal,
+                      [val.statsTypeValue]: e.target.value,
+                    }))
+                  }
+                  style={{ marginLeft: 5 }}
+                  valueLabelDisplay="auto"
+                />
+              </Box>
+            </CardActions>
+          </Card>
+        ))}
       </div>
       <br />
 
-      <div style={{ display: "flex" , justifyContent:"space-evenly" }}>
-        
+      <div style={{ display: "flex", justifyContent: "space-evenly" }}>
         <Button
           variant="contained"
           onClick={HandleSubmit}
           style={{
             backgroundColor: "#756595",
-            width:"20%",
+            width: "20%",
             fontSize: "14px",
           }}
         >
           Submit
         </Button>
-       
-          <Button
-            variant="contained"
-           
-            onClick={handleRedirect}
-            style={{
-              fontSize: "14px",
-              width:"20%",
-              backgroundColor:"  rgb(180 98 189)"
-           
-             
-            }}
-          >
-            Dashboard
-          </Button>
-     
       </div>
       <br />
-      <Stack spacing={2} sx={{ width: '100%' }}>
-      <Snackbar open={open} autoHideDuration={900} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          Data Saved!
-        </Alert>
-      </Snackbar>
-    </Stack>
-
+      <Stack spacing={2} sx={{ width: "100%" }}>
+        <Snackbar open={open} autoHideDuration={900} onClose={handleClose}>
+          <Alert
+            onClose={handleClose}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Data Saved!
+          </Alert>
+        </Snackbar>
+      </Stack>
     </Box>
   );
 }
