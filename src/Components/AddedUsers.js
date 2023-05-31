@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import Button from "@mui/material/Button";
@@ -86,6 +86,7 @@ function DashboardContent() {
   const [statsMaxValue, setStatsMaxValue] = React.useState();
   function handleOpen() {
     setModal(true);
+
   }
 
   function handleSaveData() {
@@ -101,6 +102,10 @@ function DashboardContent() {
   React.useEffect(() => {
     localStorage.setItem("cardStatsData", JSON.stringify(statsData));
   }, [statsData]);
+  const navigate=useNavigate();
+  function openCreateUserPage(){
+    navigate("/admin/createuser")
+  }
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -150,19 +155,18 @@ function DashboardContent() {
           {/*  */}
           <Button
             variant="contained"
-            style={{ marginTop: 10, fontSize: 20, fontWeight: 300 ,}}
+            style={{ marginTop: 10, fontSize: 20, fontWeight: 300 , backgroundColor:"#f5f5f5",color:"#ffa07a" }}
             onClick={handleOpen}
           >
             Add Parameter
           </Button>
           <Button
             variant="contained"
-            style={{ marginTop: 10, fontSize: 20, fontWeight: 300 }}
-            onClick={handleOpen}
+            style={{ marginTop: 10, fontSize: 20, fontWeight: 300 , backgroundColor:"#f5f5f5" ,color:"#ffa07a" }}
+            onClick={openCreateUserPage}
           >
             Create User
           </Button>
-
           <Modal
             open={modal}
             onClose={handleClose}

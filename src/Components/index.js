@@ -7,6 +7,7 @@ import AddUserStats from "./Card";
 import CreateUsers from "./CreateUsers";
 import LoginAdmin from "./LoginAdmin";
 import UserLogin from "./UserSide/UserLogin";
+import Split from "./HomePage";
 
 export {
   HomePage,
@@ -18,5 +19,5 @@ export {
   CreateUsers,
   LoginAdmin,
   UserLogin,
-
+  Split
 };

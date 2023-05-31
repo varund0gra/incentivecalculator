@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Footer from "../Footer";
+import e from "cors";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -43,14 +44,11 @@ export default function AddUserStats() {
 
     setOpen(false);
   };
-  function handleRedirect(e) {
-    e.preventDefault();
-    navigate("/app/dashboard");
-  }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  function HandleSubmit() {
+  function HandleSubmit(e) {
+    window.location.reload(true);
     const sliderValueArray = statsLocalstorgeData.map((val) => ({
       type: val.statsTypeValue,
       value: sliderVal[val.statsTypeValue] || 0,
@@ -71,7 +69,7 @@ export default function AddUserStats() {
       .then((res) => {
         setApiData(res.data);
       });
-      setOpen(true);
+    setOpen(true);
   }
   useEffect(() => {
     axios.get("http://localhost:4000/api/products").then((res) => {
@@ -86,106 +84,105 @@ export default function AddUserStats() {
 
   return (
     <>
-    <Box
-      width={300}
-      sx={{
-        margin: "0 auto",
-        marginTop: "10px",
-        width: "90%",
-        borderRadius: "1px",
-        padding: "30px",
-        boxShadow: "20px 20px 50px grey",
-      }}
-    >
-      <div style={{ margin: "0 auto", textAlign: "center" }}>
-        <h2>Select Month</h2>
-        <input
-          type="month"
-          style={{ width: "200px", height: "30px" }}
-          value={month}
-          onChange={(e) => setMonth(e.target.value)}
-        />
-      </div>
-      <div
-        className="Container"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "20px",
+      <Box
+        width={300}
+        sx={{
+          margin: "0 auto",
+          marginTop: "10px",
+          width: "90%",
+          borderRadius: "1px",
+          padding: "30px",
+          boxShadow: "20px 20px 50px grey",
         }}
       >
-        {statsLocalstorgeData.map((val) => (
-          <Card
-            key={val.statsTypeValue}
-            sx={{
-              maxWidth: 350,
-              m: 4,
-              boxShadow: "20px 20px 50px grey",
-            }}
-          >
-            <CardMedia
-              component="img"
-              height="70"
-              style={{ backgroundColor: "#756595" }}
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {val.statsTypeValue}
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Box sx={{ width: 290 }}>
-                <Typography gutterBottom>
-                  Score Value: {sliderVal[val.statsTypeValue] || 0}
-                </Typography>
-                <Slider
-                  min={0}
-                  max={Number(val.statsMaxValue)}
-                  value={sliderVal[val.statsTypeValue] || 0}
-                  onChange={(e) =>
-                    setSliderVal((prevSliderVal) => ({
-                      ...prevSliderVal,
-                      [val.statsTypeValue]: e.target.value,
-                    }))
-                  }
-                  style={{ marginLeft: 5 }}
-                  valueLabelDisplay="auto"
-                />
-              </Box>
-            </CardActions>
-          </Card>
-        ))}
-      </div>
-      <br />
-
-      <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-        <Button
-          variant="contained"
-          onClick={HandleSubmit}
+        <div style={{ margin: "0 auto", textAlign: "center" }}>
+          <h2>Select Month</h2>
+          <input
+            type="month"
+            style={{ width: "200px", height: "30px" }}
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+          />
+        </div>
+        <div
+          className="Container"
           style={{
-            backgroundColor: "#756595",
-            width: "20%",
-            fontSize: "14px",
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
           }}
         >
-          Submit
-        </Button>
-      </div>
-      <br />
-      <Stack spacing={2} sx={{ width: "100%" }}>
-        <Snackbar open={open} autoHideDuration={900} onClose={handleClose}>
-          <Alert
-            onClose={handleClose}
-            severity="success"
-            sx={{ width: "100%" }}
+          {statsLocalstorgeData.map((val) => (
+            <Card
+              key={val.statsTypeValue}
+              sx={{
+                maxWidth: 350,
+                m: 4,
+                boxShadow: "20px 20px 50px grey",
+              }}
+            >
+              <CardMedia
+                component="img"
+                height="70"
+                style={{ backgroundColor: "#756595" }}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {val.statsTypeValue}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Box sx={{ width: 290 }}>
+                  <Typography gutterBottom>
+                    Score Value: {sliderVal[val.statsTypeValue] || 0}
+                  </Typography>
+                  <Slider
+                    min={0}
+                    max={Number(val.statsMaxValue)}
+                    value={sliderVal[val.statsTypeValue] || 0}
+                    onChange={(e) =>
+                      setSliderVal((prevSliderVal) => ({
+                        ...prevSliderVal,
+                        [val.statsTypeValue]: e.target.value,
+                      }))
+                    }
+                    style={{ marginLeft: 5 }}
+                    valueLabelDisplay="auto"
+                  />
+                </Box>
+              </CardActions>
+            </Card>
+          ))}
+        </div>
+        <br />
+
+        <div style={{ display: "flex", justifyContent: "space-evenly" }}>
+          <Button
+            variant="contained"
+            onClick={HandleSubmit}
+            style={{
+              backgroundColor: "#756595",
+              width: "20%",
+              fontSize: "14px",
+            }}
           >
-            You submitted {month} Data
-          </Alert>
-        </Snackbar>
-      </Stack>
-    </Box>
-    <Footer/>
-  
+            Submit
+          </Button>
+        </div>
+        <br />
+        <Stack spacing={2} sx={{ width: "100%" }}>
+          <Snackbar open={open} autoHideDuration={900} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
+              You submitted {month} Data
+            </Alert>
+          </Snackbar>
+        </Stack>
+      </Box>
+      <Footer />
     </>
   );
 }

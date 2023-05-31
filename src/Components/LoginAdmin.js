@@ -41,7 +41,7 @@ export default function LoginAdmin() {
 
     if (email === "Hr@gmail.com" && password === "Kmit") {
       setLoginError(false);
-      navigate("/admin/createuser");
+      navigate("/admin/userlist");
     } else {
       setLoginError(true);
     }
