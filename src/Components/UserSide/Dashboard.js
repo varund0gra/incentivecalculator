@@ -26,12 +26,35 @@ import { useEffect, useState } from "react";
 import SemiCircleProgressBar from "react-progressbar-semicircle";
 import { makeStyles } from "@mui/styles";
 import axios from "axios";
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   textfield: {
     textAlign: "center",
-    fontWeight: "600 !important",
+    fontWeight: "600",
+    fontSize: "30px",
   },
-});
+  container: {
+    marginTop: "10px",
+    marginBottom: "10px",
+  },
+  paper: {
+    padding: "10px",
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    justifyContent: "space-evenly",
+  },
+  progressBarContainer: {
+    display: "flex",
+    justifyContent: "center",
+    margin: "20px",
+  },
+  progressBar: {
+    width: "100%",
+  },
+  textfield: {
+    textAlign: "center",
+  },
+}));
 const drawerWidth = 240;
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -83,13 +106,15 @@ function DashBoardContent() {
   const [sliderValueArray, setSliderValueArray] = useState([]);
   const [cardStatsData, setCardStatsData] = useState([]);
   const [index, setIndex] = useState(apiData.length - 1);
-
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  const [statsData, setStatsData] = useState([]);
+  const [progressBarValue, setProgressBarValue] = useState(0);
+  const [monthValue, setMonthValue] = useState("");
+  const [monthIndex, setMonthIndex] = useState(0);
+  const [incentive, setIncentive] = useState(1000);
 
   // fetching api data
   useEffect(() => {
+    setStatsData(JSON.parse(localStorage.getItem("cardStatsData")));
     setIndex(Number(localStorage.getItem("index")));
     axios.get("http://localhost:4000/api/products").then((res) => {
       setApiData(res.data);
@@ -102,6 +127,53 @@ function DashBoardContent() {
       setSliderValueArray(apiData[index]?.E_stats[0]?.sliderValueArray);
     }
   }, [apiData, index]);
+  let a = 0;
+  useEffect(() => {
+    for (let j = 0; j < apiData[index]?.E_stats.length; j++) {
+      for (let i = 0; i < sliderValueArray.length; i++) {
+        a = a + sliderValueArray[i].value;
+      }
+    }
+    let b = 0;
+    for (let i = 0; i < statsData.length; i++) {
+      b = b + Number(statsData[i].statsMaxValue);
+    }
+    const d = Math.round((a / b) * 100);
+    setProgressBarValue(d);
+  }, [apiData]);
+
+  function handleChange(e) {
+    setMonthValue(e.target.value);
+  }
+  // console.log(apiData[index]?.E_stats.length);
+  useEffect(() => {
+    for (let i = 0; i < apiData[index]?.E_stats.length; i++) {
+      if (apiData[index]?.E_stats[i].month == monthValue) {
+        setMonthIndex(i);
+        break;
+      }
+    }
+  }, [monthValue]);
+
+
+  React.useEffect(() => {
+    if (progressBarValue > 300) {
+      setIncentive(incentive * 2);
+    }
+    if (progressBarValue > 600) {
+      setIncentive(incentive * 3);
+    }
+    if (progressBarValue > 900) {
+      setIncentive(incentive * 4);
+    }
+    if (progressBarValue > 1000) {
+      setIncentive(incentive * 5);
+    }
+    if (progressBarValue > 1200) {
+      setIncentive(incentive * 6);
+    }
+  }, [progressBarValue]);
+
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: "flex" }}>
@@ -109,7 +181,7 @@ function DashBoardContent() {
         <AppBar position="absolute" open={open}>
           <Toolbar
             sx={{
-              pr: "24px", 
+              pr: "24px",
             }}
           >
             <IconButton
@@ -161,9 +233,17 @@ function DashBoardContent() {
                   <Select
                     labelId="demo-simple-select-autowidth-label"
                     label="Age"
+                    onChange={handleChange}
+                    value={monthValue}
                     displayEmpty
                     inputProps={{ "aria-label": "Without label" }}
-                  ></Select>
+                  >
+                    {apiData[index]?.E_stats.map((item, index) => (
+                      <MenuItem key={index} value={item.month}>
+                        {item.month}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </FormControl>
               </ListItemButton>
             </React.Fragment>
@@ -182,106 +262,78 @@ function DashBoardContent() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
               {/* Chart */}
               <Grid item xs={12} md={8} lg={9}>
-                <h2
-                  style={{
-                    textAlign: "center",
-                    color: "#1976D2",
-                    fontSize: 30,
-                    fontWeight: 800,
-                  }}
-                >
-                  Month Performance :
-                </h2>
+                <h2 className={classes.title}>Month Performance:</h2>
                 <Paper
-                  sx={{
-                    p: 2,
+                  className={classes.paper}
+                  style={{
                     display: "flex",
-                    flexDirection: "column",
-                    height: 390,
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    width: "100%",
                   }}
                 >
-                  {sliderValueArray.map((result) => {
-                    return (
-                      <>
-                        <div>
-                          {" "}
+                  {apiData[index]?.E_stats[monthIndex].sliderValueArray.map(
+                    (result, index) => (
+                      <div key={result.type}>
+                        <div className={classes.progressBarContainer}>
                           <SemiCircleProgressBar
-                            percentage={result.value}
+                            className={classes.progressBar}
+                            percentage={
+                              (result.value /
+                                cardStatsData[index].statsMaxValue) *
+                              100
+                            }
                             showPercentValue
                           />
-                          <Typography className={classes.textfield}>
-                            {" "}
-                            {result.type}
-                          </Typography>{" "}
                         </div>
-                      </>
-                    );
-                  })}
+                        <Typography className={classes.textfield}>
+                          {result.type}
+                        </Typography>
+                      </div>
+                    )
+                  )}
                 </Paper>
               </Grid>
 
               {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
-                <h2
-                  style={{
-                    textAlign: "center",
-                    color: "#1976D2",
-                    fontSize: 30,
-                    fontWeight: 800,
-                  }}
-                >
-                  {" "}
-                  Score
-                </h2>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 390,
-                  }}
-                >
-                  <Stack sx={{ width: "100%", mt: 4 }} spacing={2}>
+                <h2 className={classes.title}>Score</h2>
+                <Paper className={classes.paper}>
+                  <Stack spacing={2}>
                     <Alert severity="info">
-                      Total Calculated Incentive Rs:
+                      Total Calculated Incentive Rs: {incentive}
                     </Alert>
                   </Stack>
                 </Paper>
               </Grid>
 
               {/* Recent Orders */}
+
               <Grid item xs={12}>
-                <h2
-                  style={{
-                    textAlign: "center",
-                    color: "#1976D2",
-                    fontSize: 40,
-                    fontWeight: 700,
-                  }}
-                >
-                  {" "}
-                  Overall Score
-                </h2>
-                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+                <br />
+                <br />
+                <br />
+                <h2 className={classes.title}>Overall Score</h2>
+                <Paper className={classes.paper}>
                   <br />
                   <br />
                   <progress
                     min="0"
                     max={1200}
-                    style={{ display: "flex" }}
-                  ></progress>
+                    value={progressBarValue}
+                    style={{ width: "100%" }}
+                  />
                   <br />
-                  <h5>Maximum Score : 1200</h5>
-                  <h5>Your Score : </h5>
+                  <h5>Maximum Score: 1200</h5>
+                  <h5>Your Score: {progressBarValue}</h5>
                   <br />
                 </Paper>
               </Grid>
             </Grid>
-            {/* <Copyright sx={{ pt: 4 }} /> */}
           </Container>
           {/* <Footer /> */}
         </Box>

@@ -17,3 +17,13 @@ h5{
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
     }
+    .css-1ps6pg7-MuiPaper-root {
+      font-size: 25px;
+      font-weight: 900;
+    }
+    .css-ahj2mt-MuiTypography-root {
+      font-size: 20px !important;
+      
+
+    }
+    

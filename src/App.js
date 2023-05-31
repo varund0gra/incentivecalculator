@@ -1,4 +1,5 @@
-import { AddedUsers, AddUserStats, CreateUsers,LoginAdmin, UserLogin ,Dashboard } from "./Components";
+import { AddedUsers, AddUserStats, CreateUsers,LoginAdmin, UserLogin} from "./Components";
+import DashBoardContent from "./Components/UserSide/Dashboard";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 function App() {
@@ -10,7 +11,7 @@ function App() {
         <Route path="/admin/userlist" element={<AddedUsers />} />
         <Route path="/admin/addstats" element={<AddUserStats />} />
         <Route path="/app/signin" element={<UserLogin />} />
-        <Route path='/app/dashboard' element={<Dashboard/>}/>
+        <Route path='/app/dashboard' element={<DashBoardContent/>}/>
       </Routes>
     </BrowserRouter>
   );

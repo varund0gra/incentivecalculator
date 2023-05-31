@@ -149,11 +149,18 @@ function DashboardContent() {
           <Divider />
           {/*  */}
           <Button
-            variant="outline"
+            variant="contained"
+            style={{ marginTop: 10, fontSize: 20, fontWeight: 300 ,}}
+            onClick={handleOpen}
+          >
+            Add Parameter
+          </Button>
+          <Button
+            variant="contained"
             style={{ marginTop: 10, fontSize: 20, fontWeight: 300 }}
             onClick={handleOpen}
           >
-            Add Stats
+            Create User
           </Button>
 
           <Modal

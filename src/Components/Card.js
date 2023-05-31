@@ -13,6 +13,7 @@ import MuiAlert from "@mui/material/Alert";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Footer from "../Footer";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -70,6 +71,7 @@ export default function AddUserStats() {
       .then((res) => {
         setApiData(res.data);
       });
+      setOpen(true);
   }
   useEffect(() => {
     axios.get("http://localhost:4000/api/products").then((res) => {
@@ -83,6 +85,7 @@ export default function AddUserStats() {
   }, []);
 
   return (
+    <>
     <Box
       width={300}
       sx={{
@@ -107,7 +110,7 @@ export default function AddUserStats() {
         className="Container"
         style={{
           display: "flex",
-          justifyContent: "start",
+          justifyContent: "center",
           marginTop: "20px",
         }}
       >
@@ -176,10 +179,13 @@ export default function AddUserStats() {
             severity="success"
             sx={{ width: "100%" }}
           >
-            Data Saved!
+            You submitted {month} Data
           </Alert>
         </Snackbar>
       </Stack>
     </Box>
+    <Footer/>
+  
+    </>
   );
 }
