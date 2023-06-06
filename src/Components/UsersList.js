@@ -38,6 +38,19 @@ const AllUsers = () => {
     });
   }
 
+
+
+
+
+
+
+
+
+
+
+
+  
+
   function handleDelete(index) {
     axios
       .delete(`http://localhost:4000/api/products/${users[index]._id}`)

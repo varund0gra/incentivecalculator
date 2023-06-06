@@ -49,20 +49,25 @@ export default function AddUserStats() {
 
   function HandleSubmit(e) {
     window.location.reload(true);
+    console.log(statsLocalstorgeData);
     const sliderValueArray = statsLocalstorgeData.map((val) => ({
       type: val.statsTypeValue,
       value: sliderVal[val.statsTypeValue] || 0,
     }));
+    console.log(sliderValueArray);
+    console.log(sliderVal);
 
     const newStat = {
       month,
       sliderValueArray,
     };
+    console.log(newStat);
 
     const updatedIndexData = {
       ...indexdata,
       E_stats: [...indexdata.E_stats, newStat],
     };
+    console.log(indexdata);
 
     axios
       .put(`http://localhost:4000/api/products/${index}`, updatedIndexData)
@@ -127,7 +132,7 @@ export default function AddUserStats() {
                 style={{ backgroundColor: "#756595" }}
               />
               <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography gutterBottom variant="h5" component="div" >
                   {val.statsTypeValue}
                 </Typography>
               </CardContent>
@@ -155,7 +160,6 @@ export default function AddUserStats() {
           ))}
         </div>
         <br />
-
         <div style={{ display: "flex", justifyContent: "space-evenly" }}>
           <Button
             variant="contained"

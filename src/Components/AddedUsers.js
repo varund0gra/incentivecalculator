@@ -86,7 +86,6 @@ function DashboardContent() {
   const [statsMaxValue, setStatsMaxValue] = React.useState();
   function handleOpen() {
     setModal(true);
-
   }
 
   function handleSaveData() {
@@ -99,9 +98,16 @@ function DashboardContent() {
     ]);
     handleClose();
   }
+
+
+
   React.useEffect(() => {
     localStorage.setItem("cardStatsData", JSON.stringify(statsData));
   }, [statsData]);
+
+
+
+
   const navigate=useNavigate();
   function openCreateUserPage(){
     navigate("/admin/createuser")

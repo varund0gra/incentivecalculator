@@ -154,8 +154,6 @@ function DashBoardContent() {
       }
     }
   }, [monthValue]);
-
-
   React.useEffect(() => {
     if (progressBarValue > 300) {
       setIncentive(incentive * 2);
@@ -266,7 +264,9 @@ function DashBoardContent() {
             <Grid container spacing={3}>
               {/* Chart */}
               <Grid item xs={12} md={8} lg={9}>
-                <h2 className={classes.title}>Month Performance: {monthValue}</h2>
+                <h2 className={classes.title}>
+                  Month Performance: {monthValue}
+                </h2>
                 <Paper
                   className={classes.paper}
                   style={{
